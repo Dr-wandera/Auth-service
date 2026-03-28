@@ -1,0 +1,11 @@
+spring:
+  application:
+    name: auth-service
+
+  config:
+    import: "optional:configserver:http://localhost:8088"
+
+  jwt:
+    secret: 4D635166546A576E5A7234753778214125442A472D4B6150645367566B5970
+
+
