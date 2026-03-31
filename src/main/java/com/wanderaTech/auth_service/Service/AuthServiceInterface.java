@@ -5,9 +5,10 @@ import com.wanderaTech.auth_service.AuthDto.RegisterRequest;
 import org.springframework.http.ResponseEntity;
 
 public interface AuthServiceInterface {
-    String registerUser(RegisterRequest registerRequest);
+    void registerUser(RegisterRequest registerRequest);
 
     ResponseEntity<?> login(LoginRequest loginRequest);
 
     long getTotalCustomers();
+
 }
