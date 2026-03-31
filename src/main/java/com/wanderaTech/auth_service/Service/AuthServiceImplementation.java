@@ -44,7 +44,7 @@ public class AuthServiceImplementation  implements  AuthServiceInterface{
 
 
     @Override
-    public String registerUser(RegisterRequest registerRequest) {
+    public void registerUser(RegisterRequest registerRequest) {
 
         if (authRepository.existsByEmail(registerRequest.getEmail())) {
             throw new RuntimeException("User with this email already exists. Please log-in");
@@ -78,13 +78,16 @@ public class AuthServiceImplementation  implements  AuthServiceInterface{
         );
         log.info("User event sent to order service");
 
+        String otpCode = otpVerificationService.generateAndSaveOtp(users);
+
+        //send register notification event to notification service after registration
         notificationProducer.sendRegistrationEvent(
                 new RegisterNotificationEvent(
                         users.getLastName(),
-                        users.getEmail()
+                        users.getEmail(),
+                        otpCode
                 )
         );
-        return "You have registered successfully";
     }
 
 
