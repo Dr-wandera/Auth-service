@@ -16,8 +16,7 @@ public class RegisterNotificationProducer {
     private final KafkaTemplate<String, RegisterNotificationEvent> kafkaTemplate;
 
     public void  sendRegistrationEvent(RegisterNotificationEvent registerNotificationEvent){
-        log.info("Start sending customer  event  to order service ");
-
+        log.info("Start sending Otp to notification service ");
         Message<RegisterNotificationEvent> message= MessageBuilder
                 .withPayload(registerNotificationEvent)
                 .setHeader(KafkaHeaders.TOPIC,"register-topic")
@@ -27,4 +26,5 @@ public class RegisterNotificationProducer {
         log.info("sent  email to user   {}", registerNotificationEvent.getLastName());
         kafkaTemplate.flush();
 
-    }}
+    }
+}
