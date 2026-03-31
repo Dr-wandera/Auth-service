@@ -1,11 +1,9 @@
+
 package com.wanderaTech.auth_service.Security;
 
-import com.wanderaTech.auth_service.Model.Users;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
-import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
@@ -24,30 +22,29 @@ public class JwtService {
         return Keys.hmacShaKeyFor(SECRET_KEY.getBytes());
     }
 
-
     public String generateToken(UserDetails userDetails) {
 
         Map<String, Object> claims = new HashMap<>();
 
-        // ✅ Extract role from authorities
+        //  Extract role from authorities
         String role = userDetails.getAuthorities()
                 .stream()
                 .findFirst()
                 .map(GrantedAuthority::getAuthority)
-                .orElse("CUSTOMER"); // default fallback
-
+                .orElse("CUSTOMER");
         claims.put("role", role);
 
-        // ✅ OPTIONAL: if you have custom UserDetails with userId
+        //  Include numeric/string userId instead of email
         if (userDetails instanceof CustomUserDetails customUserDetails) {
-            claims.put("userId", customUserDetails.getUsername());
+            //  CustomUserDetails has getId() returning numeric/string ID
+            claims.put("userId", customUserDetails.getUserId());
         }
 
         return Jwts.builder()
                 .setClaims(claims)
-                .setSubject(userDetails.getUsername()) // email/username
+                .setSubject(userDetails.getUsername()) // email/username stays as subject
                 .setIssuedAt(new Date())
-                .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 24))
+                .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 24)) // 24 hours
                 .signWith(getSignKey(), SignatureAlgorithm.HS256)
                 .compact();
     }
