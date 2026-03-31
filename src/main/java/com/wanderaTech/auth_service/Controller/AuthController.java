@@ -27,4 +27,16 @@ public class AuthController {
     public long getTotalCustomers() {
         return authServiceImplementation.getTotalCustomers();
     }
+
+    @PostMapping("/verify")
+    public ResponseEntity<?> verify(@RequestBody OtpRequest request) {
+        otpVerificationService.verifyEmailByAOtp(request.getOtpCode());
+        return ResponseEntity.ok("Account verified successfully!");
+    }
+
+    @PostMapping("/resendCode")
+    public ResponseEntity<?> resendCode(@RequestBody OtpRequest request) throws MessagingException, IOException {
+        otpVerificationService.resendCodeToken(request.getOtpCode());
+        return ResponseEntity.ok("Code sent. Check your email for OTP to activate your account.");
+    }
 }
