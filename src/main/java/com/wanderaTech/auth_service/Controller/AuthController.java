@@ -8,10 +8,8 @@ import com.wanderaTech.auth_service.Service.OtpVerificationService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.messaging.MessagingException;
 import org.springframework.web.bind.annotation.*;
 
-import java.io.IOException;
 import java.util.Map;
 
 @RestController
@@ -43,13 +41,14 @@ public class AuthController {
     }
 
     @PostMapping("/verify")
+    @ResponseStatus(HttpStatus.OK)
     public ResponseEntity<?> verify(@RequestBody OtpRequest request) {
         otpVerificationService.verifyEmailByAOtp(request.getOtpCode());
         return ResponseEntity.ok("Account verified successfully!");
     }
 
     @PostMapping("/resendCode")
-    public ResponseEntity<?> resendCode(@RequestBody OtpRequest request) throws MessagingException, IOException {
+    public ResponseEntity<?> resendCode(@RequestBody OtpRequest request) {
         otpVerificationService.resendCodeToken(request.getOtpCode());
         return ResponseEntity.ok("Code sent. Check your email for OTP to activate your account.");
     }
