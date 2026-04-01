@@ -97,6 +97,13 @@ public class AuthServiceImplementation  implements  AuthServiceInterface{
         Users user=authRepository.findByEmail(loginRequest.getEmail())
                 .orElseThrow(()->new RuntimeException("invalid email! check and try again "));
 
+        //check if account is verified
+        if (!user.isVerified()) {
+            throw new RuntimeException("Please verify your account before logging in.");
+        }
+
+        log.info("logged in:{}", loginRequest);
+
         try {
             authenticate(loginRequest.getEmail(), loginRequest.getPassword());
 
