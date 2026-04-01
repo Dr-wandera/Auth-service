@@ -107,6 +107,6 @@ public class OtpVerificationService {
                 )
         );
 
-        log.info("resend otp email is sent successful");
+        log.info("resend otp email is sent successful {}", otpCode);
     }
 }
