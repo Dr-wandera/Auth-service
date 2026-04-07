@@ -41,7 +41,7 @@ public class OtpVerificationService {
         otpVerification.setUser(user);
         otpVerification.setExpiryTime(LocalDateTime.now().plusMinutes(5));
 
-        saveOtp.add(otp.hashCode());//save in linkedlist for first look up
+        saveOtp.add(Integer.valueOf(otp));//save in linkedlist for first look up
         otpVerificationRepository.save(otpVerification);
 
         return otp;
@@ -68,7 +68,7 @@ public class OtpVerificationService {
         usersRepository.save(user);
 
         // this deletes OTP after success verification from the database and in the list
-        saveOtp.remove(otp.hashCode());
+        saveOtp.remove(Integer.valueOf(otp.getOtpCode()));
         otpVerificationRepository.delete(otp);
     }
 
@@ -94,7 +94,7 @@ public class OtpVerificationService {
         newOtp.setUser(user);
         newOtp.setExpiryTime(LocalDateTime.now().plusMinutes(5));
 
-        saveOtp.add(otp.hashCode());
+        saveOtp.add(Integer.valueOf(otp));
         otpVerificationRepository.save(newOtp);
 
         //sends event for resend otp
@@ -102,10 +102,10 @@ public class OtpVerificationService {
                 new RegistrationOtpResendEvent(
                         user.getEmail(),
                         user.getLastName(),
-                        otp
+                        newOtp.getOtpCode()
                 )
         );
 
-        log.info("resend otp email is sent successful {}", otpCode);
+        log.info("resend otp email is sent successful {}", newOtp.getOtpCode());
     }
 }
