@@ -28,5 +28,14 @@ public class KafkaTopicProducer {
                 .build();
 
     }
+    //this creates kafka topic to send user details to customer, seller & admin  store the replica of user created based on the role passed
+    @Bean
+    public NewTopic userReplicaTopic(){
+        return TopicBuilder
+                .name("userReplica-topic")
+                .partitions(1)
+                .replicas(1)
+                .build();
+    }
 
 }
