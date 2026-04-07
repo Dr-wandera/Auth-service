@@ -3,6 +3,7 @@ package com.wanderaTech.auth_service.Controller;
 import com.wanderaTech.auth_service.AuthDto.LoginRequest;
 import com.wanderaTech.auth_service.AuthDto.OtpRequest;
 import com.wanderaTech.auth_service.AuthDto.RegisterRequest;
+import com.wanderaTech.auth_service.AuthDto.UserResponse;
 import com.wanderaTech.auth_service.Service.AuthServiceImplementation;
 import com.wanderaTech.auth_service.Service.OtpVerificationService;
 import lombok.RequiredArgsConstructor;
@@ -10,6 +11,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -34,6 +36,13 @@ public class AuthController {
     @ResponseStatus(HttpStatus.OK)
     public ResponseEntity<?> login(@RequestBody LoginRequest loginRequest){
         return authServiceImplementation.login(loginRequest);
+    }
+    @GetMapping("/customers")
+    public List<UserResponse> getAllUsers(
+            @RequestParam(defaultValue = "0") int page,       // Page number, default 0
+            @RequestParam(defaultValue = "10") int size
+    ){
+        return authServiceImplementation.AllUser(page, size);
     }
     @GetMapping("/totalcustomers")
     public long getTotalCustomers() {
