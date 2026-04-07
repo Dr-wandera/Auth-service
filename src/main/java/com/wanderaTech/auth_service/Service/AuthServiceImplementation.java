@@ -3,7 +3,9 @@ package com.wanderaTech.auth_service.Service;
 import com.wanderaTech.auth_service.AuthDto.LoginRequest;
 import com.wanderaTech.auth_service.AuthDto.LoginResponse;
 import com.wanderaTech.auth_service.AuthDto.RegisterRequest;
+import com.wanderaTech.auth_service.AuthDto.UserResponse;
 import com.wanderaTech.auth_service.KafkaConfig.RegisterNotificationProducer;
+import com.wanderaTech.auth_service.KafkaConfig.UserEventReplicaProducer;
 import com.wanderaTech.auth_service.KafkaConfig.UserProducer;
 import com.wanderaTech.auth_service.Model.Enum.Role;
 import com.wanderaTech.auth_service.Model.Users;
@@ -12,6 +14,7 @@ import com.wanderaTech.auth_service.Security.AppUserDetailService;
 import com.wanderaTech.auth_service.Security.JwtService;
 import com.wanderaTech.common_events.RegistrationEvent.RegisterNotificationEvent;
 import com.wanderaTech.common_events.UsersEvent.UserCreatedEvent;
+import com.wanderaTech.common_events.UsersEvent.UserCreatedEventReplica;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -26,6 +29,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
@@ -41,6 +45,7 @@ public class AuthServiceImplementation  implements  AuthServiceInterface{
     private final UserProducer userProducer;
     private final RegisterNotificationProducer notificationProducer;
     private final OtpVerificationService otpVerificationService;
+    private final UserEventReplicaProducer userEventReplicaProducer;
 
 
     @Override
@@ -77,6 +82,17 @@ public class AuthServiceImplementation  implements  AuthServiceInterface{
                 )
         );
         log.info("User event sent to order service");
+
+        userEventReplicaProducer.sendUserReplica(
+                new UserCreatedEventReplica(
+                        users.getUserId(),
+                        users.getFirstName(),
+                        users.getLastName(),
+                        users.getEmail(),
+                        users.getRole().name()
+                )
+        );
+        log.info("User replica sent of userId {}", users.getUserId());
 
         String otpCode = otpVerificationService.generateAndSaveOtp(users);
 
@@ -143,6 +159,11 @@ public class AuthServiceImplementation  implements  AuthServiceInterface{
     @Override
     public long getTotalCustomers() {
         return authRepository.count();
+    }
+
+    @Override
+    public List<UserResponse> AllUser(int page, int size) {
+        return null;
     }
 
     private void authenticate(String email, String password) {
