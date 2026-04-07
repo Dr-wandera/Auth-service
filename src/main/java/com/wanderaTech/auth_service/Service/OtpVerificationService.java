@@ -1,6 +1,5 @@
 package com.wanderaTech.auth_service.Service;
 
-import com.wanderaTech.auth_service.KafkaConfig.RegisterNotificationProducer;
 import com.wanderaTech.auth_service.KafkaConfig.RegisterOtpResendProducer;
 import com.wanderaTech.auth_service.Model.OtpVerification;
 import com.wanderaTech.auth_service.Model.Users;
