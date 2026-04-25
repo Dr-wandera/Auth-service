@@ -39,7 +39,7 @@ public class AuthController {
     }
     @GetMapping("/customers")
     public List<UserResponse> getAllUsers(
-            @RequestParam(defaultValue = "0") int page,       // Page number, default 0
+            @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size
     ){
         return authServiceImplementation.AllUser(page, size);
