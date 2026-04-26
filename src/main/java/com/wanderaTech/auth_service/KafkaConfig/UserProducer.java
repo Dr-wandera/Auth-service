@@ -24,7 +24,7 @@ public class UserProducer {
                 .build();
         kafkaTemplate.send(message);
 
-        log.info("sent  email and userid  event to order service for user snapshot {}", userCreatedEvent.getUserId());
+        log.info("sent  email and userId  event to order service for user snapshot {}", userCreatedEvent.getUserId());
         kafkaTemplate.flush();
 
     }
