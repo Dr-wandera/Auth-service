@@ -13,7 +13,7 @@ import org.springframework.stereotype.Component;
 @Component
 @RequiredArgsConstructor
 public class UserEventReplicaProducer {
-    //this publishes kafka event  to  initialize stock of the product created
+    //this publishes kafka event to Customer/ seller for profiling
     private final KafkaTemplate<String, UserCreatedEventReplica> kafkaTemplate;
 
     public void  sendUserReplica(UserCreatedEventReplica userCreatedEventReplica){
