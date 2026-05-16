@@ -1,4 +1,4 @@
-package com.wanderaTech.auth_service.KafkaConfig;
+package com.wanderaTech.auth_service.config.kafka;
 
 import org.apache.kafka.clients.admin.NewTopic;
 import org.springframework.context.annotation.Bean;
