@@ -7,6 +7,8 @@ import com.wanderaTech.auth_service.AuthDto.UserResponse;
 import com.wanderaTech.auth_service.Service.AuthServiceImplementation;
 import com.wanderaTech.auth_service.Service.OtpVerificationService;
 import lombok.RequiredArgsConstructor;
+import org.apache.http.protocol.HTTP;
+import org.springframework.cache.annotation.CachePut;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -60,5 +62,11 @@ public class AuthController {
     public ResponseEntity<?> resendCode(@RequestBody OtpRequest request) {
         otpVerificationService.resendCodeToken(request.getOtpCode());
         return ResponseEntity.ok("Code sent. Check your email for OTP to activate your account.");
+    }
+    @GetMapping("/customer/{userId}")
+    @ResponseStatus(HttpStatus.OK)
+    public UserResponse getUserById(@PathVariable String userId){
+        return authServiceImplementation.getUserById(userId);
+
     }
 }
