@@ -1,4 +1,4 @@
-package com.wanderaTech.auth_service.KafkaConfig;
+package com.wanderaTech.auth_service.config.kafka;
 
 import com.wanderaTech.common_events.RegistrationEvent.RegisterNotificationEvent;
 import lombok.RequiredArgsConstructor;
