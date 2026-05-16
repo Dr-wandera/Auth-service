@@ -17,6 +17,10 @@ import com.wanderaTech.common_events.UsersEvent.UserCreatedEvent;
 import com.wanderaTech.common_events.UsersEvent.UserCreatedEventReplica;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.CachePut;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -48,14 +52,15 @@ public class AuthServiceImplementation  implements  AuthServiceInterface{
     private final UserEventReplicaProducer userEventReplicaProducer;
 
 
+    @CacheEvict(value = "USER_DATA", allEntries = true)
     @Override
     public void registerUser(RegisterRequest registerRequest) {
 
         if (authRepository.existsByEmail(registerRequest.getEmail())) {
-            throw new RuntimeException("User with this email already exists. Please log-in");
+            throw new RuntimeException("Email already exists. Please log-in");
         }
 
-        // Convert request to entity first
+        // Convert Dto to entity
         Users users = toEntity(registerRequest);
 
         //  handle role assignment
@@ -81,7 +86,7 @@ public class AuthServiceImplementation  implements  AuthServiceInterface{
                         users.getPhoneNumber()
                 )
         );
-        log.info("User event sent to order service");
+        log.info("User info sent to order service");
 
         userEventReplicaProducer.sendUserReplica(
                 new UserCreatedEventReplica(
@@ -92,7 +97,7 @@ public class AuthServiceImplementation  implements  AuthServiceInterface{
                         users.getRole().name()
                 )
         );
-        log.info("User replica sent of userId {}", users.getUserId());
+        log.info("User info  sent of userId {}", users.getUserId());
 
         String otpCode = otpVerificationService.generateAndSaveOtp(users);
 
@@ -157,13 +162,38 @@ public class AuthServiceImplementation  implements  AuthServiceInterface{
 
     //return  number of customers
     @Override
+    @Cacheable(value = "TOTAL_CUSTOMERS")
     public long getTotalCustomers() {
         return authRepository.count();
     }
 
+    @Cacheable(value = "USER_DATA", key = "#page + '-' + #size")
     @Override
     public List<UserResponse> AllUser(int page, int size) {
-        return null;
+        return authRepository.findAll(PageRequest.of(page, size))
+                .stream()
+                .map(this::toDto)
+                .toList();
+    }
+
+    @Cacheable(value = "USER_DATA", key = "#userId")
+    @Override
+    public UserResponse getUserById(String userId) {
+        Users user = authRepository.findByUserId(userId)
+                .orElseThrow(() -> new RuntimeException("User not found with id: " + userId));
+
+        //map Entity to dto
+         return toDto(user);
+
+    }
+
+    private UserResponse toDto(Users user) {
+        UserResponse response=new UserResponse();
+        response.setEmail(user.getEmail());
+        response.setUserId(user.getUserId());
+        response.setFirstName(user.getFirstName());
+
+        return response;
     }
 
     private void authenticate(String email, String password) {
