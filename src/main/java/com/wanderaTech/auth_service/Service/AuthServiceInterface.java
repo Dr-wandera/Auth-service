@@ -15,4 +15,6 @@ public interface AuthServiceInterface {
     long getTotalCustomers();
 
    List<UserResponse> AllUser(int page, int size);
+
+    UserResponse getUserById(String userId);
 }
