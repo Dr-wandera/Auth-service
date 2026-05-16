@@ -20,6 +20,7 @@ public class CustomUserDetails implements UserDetails {
       return user.getUserId();
   }
 
+  //convert the user data to spring security format (role)
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return List.of(new SimpleGrantedAuthority("ROLE_"+user.getRole().name()));
