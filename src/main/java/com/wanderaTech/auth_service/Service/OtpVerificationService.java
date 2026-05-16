@@ -1,11 +1,10 @@
 package com.wanderaTech.auth_service.Service;
 
-import com.wanderaTech.auth_service.KafkaConfig.RegisterOtpResendProducer;
+import com.wanderaTech.auth_service.config.kafka.RegisterOtpResendProducer;
 import com.wanderaTech.auth_service.Model.OtpVerification;
 import com.wanderaTech.auth_service.Model.Users;
 import com.wanderaTech.auth_service.Repository.OtpVerificationRepository;
 import com.wanderaTech.auth_service.Repository.UsersRepository;
-import com.wanderaTech.common_events.RegistrationEvent.RegisterNotificationEvent;
 import com.wanderaTech.common_events.RegistrationEvent.RegistrationOtpResendEvent;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
