@@ -15,6 +15,7 @@ public class CustomUserDetails implements UserDetails {
 
     private final Users user;
 
+    //helper method that point to the user using userId (not from spring security)
   public  String getUserId(){
       return user.getUserId();
   }
