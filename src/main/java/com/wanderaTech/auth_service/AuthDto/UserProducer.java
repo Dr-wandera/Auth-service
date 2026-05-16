@@ -1,4 +1,4 @@
-package com.wanderaTech.auth_service.KafkaConfig;
+package com.wanderaTech.auth_service.AuthDto;
 
 import com.wanderaTech.common_events.UsersEvent.UserCreatedEvent;
 import lombok.RequiredArgsConstructor;
