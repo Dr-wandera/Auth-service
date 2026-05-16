@@ -34,15 +34,15 @@ public class JwtService {
                 .orElse("CUSTOMER");
         claims.put("role", role);
 
-        //  Include numeric/string userId instead of email
+        //string userId instead of email
         if (userDetails instanceof CustomUserDetails customUserDetails) {
-            //  CustomUserDetails has getId() returning numeric/string ID
+            //  CustomUserDetails has getUserId() returning numeric/string userId
             claims.put("userId", customUserDetails.getUserId());
         }
 
         return Jwts.builder()
                 .setClaims(claims)
-                .setSubject(userDetails.getUsername()) // email/username stays as subject
+                .setSubject(userDetails.getUsername())
                 .setIssuedAt(new Date())
                 .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 24)) // 24 hours
                 .signWith(getSignKey(), SignatureAlgorithm.HS256)
