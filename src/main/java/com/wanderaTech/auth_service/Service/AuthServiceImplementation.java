@@ -120,10 +120,10 @@ public class AuthServiceImplementation  implements  AuthServiceInterface{
 
         //check if account is verified
         if (!user.isVerified()) {
-            throw new RuntimeException("Please verify your account before logging in.");
+            throw new RuntimeException("Please activate your account before logging in.");
         }
 
-        log.info("logged in:{}", loginRequest);
+        log.info("Start logging process of email:{}", loginRequest.getEmail());
 
         try {
             authenticate(loginRequest.getEmail(), loginRequest.getPassword());
@@ -150,13 +150,13 @@ public class AuthServiceImplementation  implements  AuthServiceInterface{
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body( response);
 
         }
-        catch (Exception e) {
+        catch (org.springframework.security.core.AuthenticationException ex) {
             Map<String, Object> response = new HashMap<>();
             response.put("error", true);
-            response.put("message", "Authentication Failed");
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body( response);
-
+            response.put("message", "Security error: " + ex.getMessage());
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(response);
         }
+
     }
 
 
