@@ -17,7 +17,7 @@ public class AppUserDetailService implements UserDetailsService {
     private final UsersRepository userRepository;
 
     //loads user using email from database and convert it to user details
-//    @Cacheable(value = "USER_DATA",key = "#result.username")//cache result of user data loaded from database
+    @Cacheable(value = "USER_DATA",key = "#result.username")//cache result of user data loaded from database
     @Override
     public UserDetails loadUserByUsername(@NonNull String email) throws UsernameNotFoundException {
 
